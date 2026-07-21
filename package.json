@@ -1,0 +1,15 @@
+{
+  "name": "ai-image-generator",
+  "version": "2.0.0",
+  "description": "AI 文生图工具 - 支持 Pollinations / Fal.ai 双 Provider",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:fal": "PROVIDER=fal node server.js",
+    "start:pollinations": "PROVIDER=pollinations node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2"
+  }
+}
