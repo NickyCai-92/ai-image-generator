@@ -52,7 +52,8 @@ class D1Client {
     await this.query(`
       CREATE TABLE IF NOT EXISTS showcase_images (
         id         INTEGER PRIMARY KEY AUTOINCREMENT,
-        image_data TEXT    NOT NULL,
+        image_data TEXT    NOT NULL DEFAULT '',
+        image_url  TEXT    DEFAULT '',
         prompt     TEXT    NOT NULL DEFAULT '',
         model      TEXT    NOT NULL DEFAULT '',
         provider   TEXT    NOT NULL DEFAULT '',
@@ -60,6 +61,8 @@ class D1Client {
         created_at TEXT    NOT NULL DEFAULT (datetime('now'))
       )
     `);
+    // 旧表没有 image_url 列，补上（幂等）
+    await this.query(`ALTER TABLE showcase_images ADD COLUMN image_url TEXT DEFAULT ''`).catch(() => {});
     await this.query(`
       CREATE INDEX IF NOT EXISTS idx_showcase_created
       ON showcase_images(created_at DESC)
@@ -70,11 +73,11 @@ class D1Client {
    * 保存一张生成记录
    * @param {string} imageData - data:image/jpeg;base64,...
    */
-  async saveImage({ imageData, prompt, model, provider, scene }) {
+  async saveImage({ imageData, imageUrl, prompt, model, provider, scene }) {
     return this.query(
-      `INSERT INTO showcase_images (image_data, prompt, model, provider, scene)
-       VALUES (?, ?, ?, ?, ?)`,
-      [imageData, prompt || '', model || '', provider || '', scene || '']
+      `INSERT INTO showcase_images (image_data, image_url, prompt, model, provider, scene)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [imageData || '', imageUrl || '', prompt || '', model || '', provider || '', scene || '']
     );
   }
 
@@ -86,7 +89,7 @@ class D1Client {
   async getLatestImages(limit = 10) {
     const cap = Math.min(limit, 30);
     const result = await this.query(
-      `SELECT id, prompt, model, provider, scene, created_at
+      `SELECT id, image_url, prompt, model, provider, scene, created_at
        FROM showcase_images
        ORDER BY id DESC
        LIMIT ?`,
@@ -104,7 +107,7 @@ class D1Client {
    */
   async getImage(id) {
     const result = await this.query(
-      'SELECT id, image_data, prompt, model, provider, scene, created_at FROM showcase_images WHERE id = ?',
+      'SELECT id, image_data, image_url, prompt, model, provider, scene, created_at FROM showcase_images WHERE id = ?',
       [id]
     );
     if (result && result[0] && result[0].results && result[0].results.length) {

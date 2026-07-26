@@ -13,6 +13,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const { D1Client } = require('./db/d1');
+const { R2Client } = require('./db/r2');
 const {
   getProvider,
   listProviders,
@@ -43,6 +44,25 @@ if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.D1_DATABASE_ID && process.e
   });
 } else {
   console.log('ℹ️  D1 未配置，Showcase 功能禁用（设置 CLOUDFLARE_ACCOUNT_ID / D1_DATABASE_ID / D1_API_TOKEN 启用）');
+}
+
+// R2 图片存储（可选）
+let r2 = null;
+if (process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && process.env.R2_BUCKET && process.env.R2_PUBLIC_URL) {
+  try {
+    r2 = new R2Client({
+      accountId: process.env.R2_ACCOUNT_ID,
+      accessKeyId: process.env.R2_ACCESS_KEY_ID,
+      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+      bucket: process.env.R2_BUCKET,
+      publicUrl: process.env.R2_PUBLIC_URL,
+    });
+    console.log('✅ R2 图片存储已就绪');
+  } catch (err) {
+    console.error('❌ R2 初始化失败:', err.message);
+  }
+} else {
+  console.log('ℹ️  R2 未配置，图片将用 base64 内联存储（设置 R2_* 环境变量启用）');
 }
 
 app.use(express.json({ limit: '20mb' }));
@@ -241,8 +261,17 @@ app.post('/api/showcase/save', async (req, res) => {
   const { image, prompt, model, provider, scene } = req.body;
   if (!image) return res.status(400).json({ error: '缺少图片数据' });
   try {
-    await d1.saveImage({ imageData: image, prompt, model, provider, scene });
-    res.json({ success: true });
+    let imageUrl = '';
+    // 如果有 R2，上传到 R2 再保存 URL
+    if (r2) {
+      imageUrl = await r2.uploadImage(image);
+    }
+    await d1.saveImage({
+      imageData: r2 ? '' : image, // 有 R2 时不用存 base64
+      imageUrl,
+      prompt, model, provider, scene,
+    });
+    res.json({ success: true, imageUrl });
   } catch (err) {
     res.status(500).json({ error: '保存失败', details: err.message });
   }
@@ -259,13 +288,28 @@ app.get('/api/showcase/latest', async (req, res) => {
   }
 });
 
-// ============ API: 获取单张 Showcase 图片（含完整 dataUrl） ============
+// ============ API: 获取单张 Showcase 图片 ============
 app.get('/api/showcase/image/:id', async (req, res) => {
   if (!d1) return res.status(503).json({ error: 'Showcase 未启用（D1 未配置）' });
   try {
     const img = await d1.getImage(Number(req.params.id));
     if (!img) return res.status(404).json({ error: '图片不存在' });
-    res.json({ success: true, image: img });
+    // 如果有 R2 URL，重定向到 R2（304/302 让浏览器直接加载）
+    if (img.image_url) {
+      return res.redirect(301, img.image_url);
+    }
+    // 降级：没有 R2 URL 则返回 base64 data URL
+    if (img.image_data) {
+      const base64 = img.image_data;
+      const match = base64.match(/^data:image\/(\w+);base64,(.+)$/);
+      if (match) {
+        const buf = Buffer.from(match[2], 'base64');
+        res.set('Content-Type', `image/${match[1]}`);
+        res.set('Cache-Control', 'public, max-age=31536000');
+        return res.send(buf);
+      }
+    }
+    return res.status(404).json({ error: '图片数据为空' });
   } catch (err) {
     res.status(500).json({ error: '查询失败', details: err.message });
   }
