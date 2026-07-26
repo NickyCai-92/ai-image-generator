@@ -9,7 +9,7 @@ const state = {
     model: 'gemini-3-pro-image-preview',
     style: '',
     aspectRatio: '1:1',
-    resolution: '1K 高清',
+    resolution: '1k',
     count: 1,
   },
   uploadedImage: null, // { dataUrl, name }
@@ -47,10 +47,41 @@ async function setLang(code) {
     document.querySelectorAll('.lang-btn').forEach((b) => {
       b.classList.toggle('active', b.dataset.lang === code);
     });
+    // 重新同步已渲染的动态内容（分辨率/风格/计数/provider 徽标等）
+    if (state.config) {
+      syncPillsFromState();
+      buildDropdowns();        // 重绘下拉菜单（模型描述/风格名/分辨率等都需要翻译）
+      buildProviderSwitcher(); // 重绘引擎徽标
+      updateStudioSceneLabels();
+    }
+    // 重新刷新 footer / result 区
+    updateFooterProvider();
+    rerenderShowcaseIfNeeded();
   } catch (err) {
     console.warn('[i18n] 加载失败:', err.message);
     if (code !== 'zh') setLang('zh');
   }
+}
+
+/**
+ * 创意工坊场景按钮文字也跟着切语言
+ */
+function updateStudioSceneLabels() {
+  document.querySelectorAll('.studio-scene').forEach((btn) => {
+    const scene = btn.dataset.scene;
+    const nameEl = btn.querySelector('.studio-scene-name');
+    const hintEl = btn.querySelector('.studio-scene-hint');
+    if (nameEl) nameEl.textContent = t(`studio_scene_${scene}`);
+    if (hintEl) hintEl.textContent = t(`studio_scene_${scene}_hint`);
+  });
+  // 应用 tab 输入 placeholder
+  applyI18n();
+}
+
+function rerenderShowcaseIfNeeded() {
+  const grid = $('#showcaseGrid');
+  if (!grid || grid.children.length <= 1) return;
+  loadShowcase();
 }
 
 function applyI18n() {
@@ -63,6 +94,10 @@ function applyI18n() {
     } else {
       el.textContent = raw;
     }
+  });
+  // aria-label 等属性也要跟着换语言
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+    el.setAttribute('aria-label', t(el.dataset.i18nAria));
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
     el.placeholder = t(el.dataset.i18nPlaceholder);
@@ -215,11 +250,11 @@ function buildProviderSwitcher() {
     btn.disabled = !p.available;
     btn.innerHTML = `
       <span class="provider-btn-name">${p.name}</span>
-      <span class="provider-btn-badge">${p.badge}</span>
-      ${!p.available ? '<span class="provider-btn-hint">需 Key</span>' : ''}
+      <span class="provider-btn-badge">${t(`provider_${p.id}_badge`) || p.badge}</span>
+      ${!p.available ? `<span class="provider-btn-hint">${t('provider_btn_need_key')}</span>` : ''}
     `;
     if (p.id === state.activeProvider) btn.classList.add('active');
-    if (!p.available) btn.title = `${p.name} 暂不可用：需要 API Key`;
+    if (!p.available) btn.title = t('provider_aria_unavailable_template', { name: p.name });
     btn.addEventListener('click', () => {
       if (!p.available || p.id === state.activeProvider) return;
       switchProvider(p.id);
@@ -316,7 +351,7 @@ function updateI2IAvailability() {
     i2iTab.title = '';
   } else {
     i2iTab.classList.add('disabled');
-    i2iTab.title = '当前 Provider 不支持图生图，请切换到 AIHubMix / Pollinations / Fal.ai 等支持图生图的引擎';
+    i2iTab.title = t('need_key');
     if (state.selected.tab === 'i2i') {
       switchTab('t2i');
     }
@@ -336,24 +371,24 @@ function currentModelSupportsI2I() {
 function buildDropdowns() {
   const { models, styles, aspectRatios, resolutions, maxCount } = state.config;
 
-  // 模型
+  // 模型：优先用 lang 里的翻译 desc，fallback 走后端原始 desc
   fillDropdown('model', models.map((m) => ({
     value: m.id,
     label: m.name,
     icon: m.icon,
-    desc: m.desc,
+    desc: t(`model_desc_${m.id}`) || m.desc || '',
   })));
   setSelected('model', state.selected.model);
 
-  // 风格
+  // 风格：lang 优先，否则用 server 配置
   fillDropdown('style', styles.map((s) => ({
     value: s.id,
-    label: s.name,
+    label: t(`style_${s.id}_name`) || s.name,
     icon: s.id ? '🎨' : '🚫',
   })));
   setSelected('style', state.selected.style);
 
-  // 比例
+  // 比例（1:1 / 16:9 等是数字+符号，国际通用）
   fillDropdown('ratio', aspectRatios.map((r) => ({
     value: r,
     label: r,
@@ -364,15 +399,15 @@ function buildDropdowns() {
   // 分辨率
   fillDropdown('resolution', resolutions.map((r) => ({
     value: r,
-    label: r,
+    label: resLabel(r),
     icon: '📐',
   })));
   setSelected('resolution', state.selected.resolution);
 
-  // 数量
+  // 数量：用模板（去掉"张"）
   const counts = Array.from({ length: maxCount }, (_, i) => ({
     value: i + 1,
-    label: `${i + 1} 张`,
+    label: t('pill_count_template', { count: i + 1 }),
     icon: '🗂',
   }));
   fillDropdown('count', counts);
@@ -434,6 +469,18 @@ function selectOption(key, value, label, icon) {
   setSelected(key, value);
 }
 
+// ============ 显示标签：把语言无关 ID 翻译成当前语言的展示文 ============
+const RESOLUTION_LABEL = {
+  sd:  { zh: '标清',     en: 'SD',       ja: 'SD'     },
+  '1k': { zh: '1K 高清', en: '1K HD',     ja: '1K HD'   },
+  '2k': { zh: '2K 超清', en: '2K Ultra',  ja: '2K Ultra' },
+  '4k': { zh: '4K 影院', en: '4K Cinema', ja: '4K シネマ' },
+};
+function resLabel(id) {
+  const lang = state.lang || 'zh';
+  return (RESOLUTION_LABEL[id] && RESOLUTION_LABEL[id][lang]) || id;
+}
+
 function syncPillsFromState() {
   const { config, selected } = state;
   if (!config) return;
@@ -446,10 +493,12 @@ function syncPillsFromState() {
     setSelected('model', model.id);
   }
   const styleObj = config.styles.find((s) => s.id === selected.style) || config.styles[0];
-  selectOption('style', styleObj.id, styleObj.name);
+  // 风格默认空选项 → i18n 'pill_style_default'
+  const styleLabel = styleObj.id === '' ? t('pill_style_default') : (t(`style_${styleObj.id}_name`) || styleObj.name);
+  selectOption('style', styleObj.id, styleLabel);
   selectOption('ratio', selected.aspectRatio, selected.aspectRatio, ratioIcon(selected.aspectRatio));
-  selectOption('resolution', selected.resolution, selected.resolution);
-  selectOption('count', selected.count, `${selected.count} 张`);
+  selectOption('resolution', selected.resolution, resLabel(selected.resolution));
+  selectOption('count', selected.count, t('pill_count_template', { count: selected.count }));
 }
 
 // ============ 事件绑定 ============
@@ -1047,7 +1096,7 @@ function showToast(msg, type = 'info', duration = 3500) {
 function showResult(images, prompt, model, provider) {
   _finishProgress();
   _setGenState('result');
-  $('#resultMeta').textContent = `${model} · 共 ${images.length} 张`;
+  $('#resultMeta').textContent = t('result_meta_template', { model, count: images.length });
 
   const badge = $('#resultProviderBadge');
   const pInfo = state.providers.find((p) => p.id === provider);

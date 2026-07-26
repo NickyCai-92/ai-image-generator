@@ -211,12 +211,20 @@ const ASPECT_RATIOS = {
   '2:3':  { w: 800,  h: 1200 },
 };
 
-// ============ 分辨率档位（缩放系数） ============
+// ============ 分辨率档位（缩放系数 · key 用语言无关 ID） ============
 const RESOLUTIONS = {
-  '标清': 0.75,
-  '1K 高清': 1,
-  '2K 超清': 1.5,
-  '4K 影院': 2,
+  'sd': 0.75,
+  '1k': 1,
+  '2k': 1.5,
+  '4k': 2,
+};
+
+// 各语言显示标签
+const RESOLUTION_LABELS = {
+  'sd':  { zh: '标清',     en: 'SD',       ja: 'SD'     },
+  '1k': { zh: '1K 高清', en: '1K HD',    ja: '1K HD'  },
+  '2k': { zh: '2K 超清', en: '2K Ultra', ja: '2K Ultra' },
+  '4k': { zh: '4K 影院', en: '4K Cinema', ja: '4K シネマ'  },
 };
 
 const MAX_COUNT = 4;
@@ -277,6 +285,7 @@ module.exports = {
   STYLES,
   ASPECT_RATIOS,
   RESOLUTIONS,
+  RESOLUTION_LABELS,
   MAX_COUNT,
   DEFAULT_PROVIDER,
   UI_FLAGS,

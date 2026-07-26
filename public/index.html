@@ -14,16 +14,17 @@
   <!-- ====== 顶部导航 ====== -->
   <header class="header" id="header">
     <div class="header-inner">
-      <a href="#" class="logo" aria-label="AI 绘境 · 返回首页">
+      <a href="#" class="logo" aria-label="AI 绘境 · 返回首页" data-i18n-aria="site_name_aria">
         <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
           <path d="M4 20 L8 4 L12 14 L16 4 L20 20"/>
         </svg>
-        <span class="logo-text">AI 绘境</span>
+        <span class="logo-text" data-i18n="site_name">AI 绘境</span>
       </a>
       <nav class="nav" id="nav" aria-label="主导航">
         <a href="#hero" class="nav-link active" data-i18n="nav_home">首页</a>
         <a href="#tool" class="nav-link" data-i18n="nav_generate">在线生成</a>
         <a href="#templates" class="nav-link" data-i18n="nav_templates">模板</a>
+        <a href="#showcase" class="nav-link" data-i18n="footer_link_showcase">精选作品</a>
         <a href="#faq" class="nav-link" data-i18n="nav_faq">常见问题</a>
       </nav>
       <div class="lang-switcher">
@@ -61,15 +62,15 @@
       <div class="hero-stats">
         <div class="hero-stat">
           <span class="hero-stat-num">20+</span>
-          <span class="hero-stat-label">跨厂商生图模型</span>
+          <span class="hero-stat-label" data-i18n="hero_stat1_label">跨厂商生图模型</span>
         </div>
         <div class="hero-stat">
-          <span class="hero-stat-num">3</span>
-          <span class="hero-stat-label">统一接入引擎</span>
+          <span class="hero-stat-num">4</span>
+          <span class="hero-stat-label" data-i18n="hero_stat2_label">统一接入引擎</span>
         </div>
         <div class="hero-stat">
           <span class="hero-stat-num">¥10</span>
-          <span class="hero-stat-label">即可开画</span>
+          <span class="hero-stat-label" data-i18n="hero_stat3_label">即可开画</span>
         </div>
       </div>
     </div>
@@ -130,8 +131,8 @@
             <input type="file" id="fileInput" accept="image/*" hidden>
             <div class="upload-empty" id="uploadEmpty">
               <div class="upload-icon" aria-hidden="true">⬆</div>
-              <div class="upload-text">上传图片</div>
-              <div class="upload-hint">支持点击 / 拖动 / 粘贴 上传</div>
+              <div class="upload-text" data-i18n="upload_text">上传图片</div>
+              <div class="upload-hint" data-i18n="upload_hint">支持点击 / 拖动 / 粘贴 上传</div>
             </div>
             <div class="upload-preview hidden" id="uploadPreview">
               <img id="previewImg" alt="参考图预览" />
@@ -153,24 +154,24 @@
         <div class="tab-content" id="panel-studio" role="tabpanel" aria-labelledby="tab-studio" data-content="studio" hidden>
           <div class="studio-scenes" id="studioScenes" aria-label="场景模板">
             <button class="studio-scene active" data-scene="edit" type="button">
-              <div class="studio-scene-icon">✏️</div>
-              <div class="studio-scene-name">局部编辑</div>
-              <div class="studio-scene-hint">改颜色/加道具/修细节</div>
+              <div class="studio-scene-icon" aria-hidden="true">✏️</div>
+              <div class="studio-scene-name" data-i18n="studio_scene_edit">局部编辑</div>
+              <div class="studio-scene-hint" data-i18n="studio_scene_edit_hint">改颜色/加道具/修细节</div>
             </button>
             <button class="studio-scene" data-scene="outfit" type="button">
-              <div class="studio-scene-icon">👗</div>
-              <div class="studio-scene-name">换装</div>
-              <div class="studio-scene-hint">图A服装 → 图B的人</div>
+              <div class="studio-scene-icon" aria-hidden="true">👗</div>
+              <div class="studio-scene-name" data-i18n="studio_scene_outfit">换装</div>
+              <div class="studio-scene-hint" data-i18n="studio_scene_outfit_hint">图A服装 → 图B的人</div>
             </button>
             <button class="studio-scene" data-scene="fusion" type="button">
-              <div class="studio-scene-icon">🧩</div>
-              <div class="studio-scene-name">融合</div>
-              <div class="studio-scene-hint">图A + 图B → 合成</div>
+              <div class="studio-scene-icon" aria-hidden="true">🧩</div>
+              <div class="studio-scene-name" data-i18n="studio_scene_fusion">融合</div>
+              <div class="studio-scene-hint" data-i18n="studio_scene_fusion_hint">图A + 图B → 合成</div>
             </button>
             <button class="studio-scene" data-scene="bg" type="button">
-              <div class="studio-scene-icon">🏠</div>
-              <div class="studio-scene-name">换背景</div>
-              <div class="studio-scene-hint">保留主体，换场景</div>
+              <div class="studio-scene-icon" aria-hidden="true">🏠</div>
+              <div class="studio-scene-name" data-i18n="studio_scene_bg">换背景</div>
+              <div class="studio-scene-hint" data-i18n="studio_scene_bg_hint">保留主体，换场景</div>
             </button>
           </div>
           <div class="studio-upload" id="studioUpload">
@@ -244,9 +245,9 @@
           <button class="pill pill-icon-only" id="moreBtn" aria-label="更多设置" title="更多设置">⋯</button>
 
           <button class="btn-generate" id="generateBtn" aria-label="生成图片（快捷键 Ctrl+Enter）">
-            <span class="btn-generate-icon" aria-hidden="true">✦</span>
-            <span>生成</span>
-            <kbd class="btn-generate-kbd" aria-hidden="true">⌘↵</kbd>
+          <span class="btn-generate-icon" aria-hidden="true">✦</span>
+          <span data-i18n="btn_generate">生成</span>
+          <kbd class="btn-generate-kbd" aria-hidden="true">⌘↵</kbd>
           </button>
         </div>
       </div>
@@ -255,9 +256,9 @@
       <div class="gen-slot" id="genSlot">
         <!-- 占位（默认） -->
         <div class="gen-placeholder" id="genPlaceholder">
-          <div class="gen-placeholder-icon">🎨</div>
-          <div class="gen-placeholder-title">生成的图片将在这里显示</div>
-          <div class="gen-placeholder-hint">输入提示词 → 选择模型 → 点击「生成」</div>
+          <div class="gen-placeholder-icon" aria-hidden="true">✦</div>
+          <div class="gen-placeholder-title" data-i18n="gen_placeholder_title">生成的图片将在这里显示</div>
+          <div class="gen-placeholder-hint" data-i18n="gen_placeholder_hint">输入提示词 → 选择模型 → 点击「生成」</div>
         </div>
 
         <!-- 进度（生成中） -->
@@ -317,45 +318,45 @@
   <section class="section section-ink" id="templates">
     <div class="section-inner">
       <div class="section-header">
-        <span class="section-eyebrow">02 — Curated</span>
-        <h2 class="section-title">精选模板</h2>
-        <p class="section-desc">使用预设模板快速生成，一键应用同款风格</p>
+        <span class="section-eyebrow" data-i18n="section_templates_eyebrow">02 — Curated</span>
+        <h2 class="section-title" data-i18n="section_templates_title">精选模板</h2>
+        <p class="section-desc" data-i18n="section_templates_desc">使用预设模板快速生成，一键应用同款风格</p>
       </div>
       <div class="template-grid">
-        <button class="template-card" type="button" aria-label="应用模板：水墨山水">
+        <button class="template-card" type="button" aria-label="水墨山水模板">
           <div class="template-img template-placeholder" aria-hidden="true">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 20 L9 12 L13 16 L21 6"/><circle cx="17" cy="7" r="1.5" fill="currentColor"/></svg>
           </div>
           <div class="template-info">
-            <h3 class="template-name">水墨山水</h3>
-            <p class="template-desc">国风水墨风格，淡雅意境</p>
+            <h3 class="template-name" data-i18n="template_1_name">水墨山水</h3>
+            <p class="template-desc" data-i18n="template_1_desc">国风水墨风格，淡雅意境</p>
           </div>
         </button>
-        <button class="template-card" type="button" aria-label="应用模板：赛博都市">
+        <button class="template-card" type="button" aria-label="赛博都市模板">
           <div class="template-img template-placeholder" aria-hidden="true">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="10" width="4" height="10"/><rect x="10" y="4" width="4" height="16"/><rect x="17" y="8" width="4" height="12"/></svg>
           </div>
           <div class="template-info">
-            <h3 class="template-name">赛博都市</h3>
-            <p class="template-desc">霓虹灯效，未来都市夜景</p>
+            <h3 class="template-name" data-i18n="template_2_name">赛博都市</h3>
+            <p class="template-desc" data-i18n="template_2_desc">霓虹灯效，未来都市夜景</p>
           </div>
         </button>
-        <button class="template-card" type="button" aria-label="应用模板：动漫少女">
+        <button class="template-card" type="button" aria-label="动漫少女模板">
           <div class="template-img template-placeholder" aria-hidden="true">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="9" r="4"/><path d="M5 21 C 5 16, 8 14, 12 14 C 16 14, 19 16, 19 21"/></svg>
           </div>
           <div class="template-info">
-            <h3 class="template-name">动漫少女</h3>
-            <p class="template-desc">日系二次元风格角色</p>
+            <h3 class="template-name" data-i18n="template_3_name">动漫少女</h3>
+            <p class="template-desc" data-i18n="template_3_desc">日系二次元风格角色</p>
           </div>
         </button>
-        <button class="template-card" type="button" aria-label="应用模板：奇幻角色">
+        <button class="template-card" type="button" aria-label="奇幻角色模板">
           <div class="template-img template-placeholder" aria-hidden="true">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 3 L18 8 L15 14 L18 21 L12 17 L6 21 L9 14 L6 8 Z"/></svg>
           </div>
           <div class="template-info">
-            <h3 class="template-name">奇幻角色</h3>
-            <p class="template-desc">D&amp;D 风格奇幻人物设定</p>
+            <h3 class="template-name" data-i18n="template_4_name">奇幻角色</h3>
+            <p class="template-desc" data-i18n="template_4_desc">D&amp;D 风格奇幻人物设定</p>
           </div>
         </button>
       </div>
@@ -366,82 +367,73 @@
   <section class="section" id="faq">
     <div class="section-inner">
       <div class="section-header">
-        <span class="section-eyebrow">03 — Handbook</span>
-        <h2 class="section-title">常见问题</h2>
-        <p class="section-desc">关于 AI 图片生成器的使用疑问</p>
+        <span class="section-eyebrow" data-i18n="section_faq_eyebrow">03 — Handbook</span>
+        <h2 class="section-title" data-i18n="section_faq_title">常见问题</h2>
+        <p class="section-desc" data-i18n="section_faq_desc">关于 AI 图片生成器的使用疑问</p>
       </div>
       <div class="faq-list" id="faqList">
         <details class="faq-item">
           <summary class="faq-question">
-            <span>如何开始使用？需要配置什么？</span>
+            <span data-i18n="faq_q1">如何开始使用？需要配置什么？</span>
             <span class="faq-icon" aria-hidden="true">▾</span>
           </summary>
           <div class="faq-answer">
-            <p>本工具默认使用 <strong>AIHubMix</strong> 统一接入引擎。你只需：① 登录 <a href="https://aihubmix.com/token" target="_blank" rel="noopener">aihubmix.com/token</a> 创建一个 API Key（支持支付宝/微信充值）；② 把 Key 粘贴到生成区顶部的输入框并保存（存在浏览器本地，随请求发送）；③ 输入提示词点击生成即可。也可以把 Key 写进 <code>.env</code> 的 <code>AIHUBMIX_KEY</code>。</p>
+            <p data-i18n="faq_a1" data-i18n-html="true">本工具默认使用 <strong>AIHubMix</strong> 统一接入引擎。你只需：① 登录 <a href="https://aihubmix.com/token" target="_blank" rel="noopener">aihubmix.com/token</a> 创建一个 API Key（支持支付宝/微信充值）；② 把 Key 粘贴到生成区顶部的输入框并保存（存在浏览器本地，随请求发送）；③ 输入提示词点击生成即可。也可以把 Key 写进 <code>.env</code> 的 <code>AIHUBMIX_KEY</code>。</p>
           </div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
-            <span>支持哪些模型？有什么区别？</span>
+            <span data-i18n="faq_q2">支持哪些模型？有什么区别？</span>
             <span class="faq-icon" aria-hidden="true">▾</span>
           </summary>
           <div class="faq-answer">
-            <p>两个主引擎，可任意切换：</p>
-            <p><strong>① AIHubMix（统一接入·付费）</strong>覆盖 6 大跨厂商热门生图模型：<strong>Nano Banana Pro</strong>（谷歌顶配·角色一致）、<strong>Nano Banana 2</strong>（谷歌高速·低成本）、<strong>GPT Image 2</strong>（OpenAI·文字渲染）、<strong>Seedream 5.0 Pro</strong>（字节·精准编辑）、<strong>FLUX Kontext</strong>（BFL·局部编辑）、<strong>Z-Image Turbo</strong>（智谱·极速）。支付宝/微信充值即可使用。</p>
-            <p><strong>② Hugging Face（完全免费）</strong>提供 4 个公开 SDXL/SD 开源模型：<strong>SDXL Lightning</strong>（4 步极速·推荐免费）、<strong>SDXL 1.0</strong>（高画质）、<strong>SD 2.1</strong>（稳定基础款）、<strong>SD 1.5</strong>（经典款）。只需去 <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">huggingface.co/settings/tokens</a> 建一个免费 token 即可，零充值门槛。</p>
-            <p>此外还有 <strong>Pollinations</strong> 作为备用引擎（需 Token + 账户有 pollen 余额，支付宝充值最低约 ¥10）。模型列表在生成区顶部切换。</p>
+            <p data-i18n="faq_q2_intro" data-i18n-html="true">两个主引擎，可任意切换：</p>
+            <p data-i18n="faq_q2_a">AIHubMix 覆盖 6 大跨厂商热门生图模型，包括 Nano Banana Pro（谷歌顶配）、Nano Banana 2（谷歌高速）、GPT Image 2（OpenAI·文字渲染）、Seedream 5.0 Pro（字节）、FLUX Kontext（BFL）、Z-Image Turbo（智谱）。支付宝/微信充值。</p>
+            <p data-i18n="faq_q2_b">Hugging Face 提供 4 个公开 SDXL/SD 开源模型，免费可用。只需去 huggingface.co 建一个免费 token。</p>
+            <p data-i18n="faq_q2_c">Pollinations 是备用引擎，$1 ≈ 1 pollen，支付宝 ¥10 起充。</p>
           </div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
-            <span>Hugging Face 的免费档有什么限制？</span>
+            <span data-i18n="faq_q3">AIHubMix / Pollinations 收费吗？</span>
             <span class="faq-icon" aria-hidden="true">▾</span>
           </summary>
           <div class="faq-answer">
-            <p>免费账户有两个特点：① <strong>冷启动慢</strong>：首次调用一个模型需等 20-60s（HF 要把模型加载到 GPU worker），之后会快很多；② <strong>rate limit</strong>：免费账户每分钟调用次数有限（一般 3-10 次），所以 HF 模型单次只能生成 1 张。画质比 nano banana / GPT Image 2 略逊，但完全零成本出图够用。</p>
+            <p data-i18n="faq_q3_intro" data-i18n-html="true"><strong>都支持支付宝充值</strong>（最低约 ¥10）。</p>
+            <p data-i18n="faq_q3_a">AIHubMix：单张约 ¥0.05-2，模型不同价格不同。</p>
+            <p data-i18n="faq_q3_b">Pollinations：单张约 $0.0001-0.02（pollen 计价）。</p>
           </div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
-            <span>AIHubMix / Pollinations 收费吗？大概多少钱？</span>
+            <span data-i18n="faq_q4">图生图功能如何使用？</span>
             <span class="faq-icon" aria-hidden="true">▾</span>
           </summary>
           <div class="faq-answer">
-            <p>两者都按量计费、无会员无包月，<strong>都支持支付宝充值</strong>（最低约 ¥10）。</p>
-            <p>AIHubMix：单张约 ¥0.05-2（Flux Schnell 最便宜、Pro 最贵）。具体以 <a href="https://aihubmix.com/pricing" target="_blank" rel="noopener">aihubmix.com 计费说明</a>为准。</p>
-            <p>Pollinations：原厂定价，单张约 0.0001-0.12 pollen（pollen ≈ $0.01）。Nano Banana 系列按输出 token 计费、Quest 模型可做任务免费拿 pollen。详见 <a href="https://enter.pollinations.ai/pricing" target="_blank" rel="noopener">enter.pollinations.ai/pricing</a>。</p>
+            <p data-i18n="faq_a4">切换到「图生图」标签页，上传参考图片（支持点击上传、拖拽上传、剪贴板粘贴），输入提示词描述你想要的改动，点击生成即可。</p>
           </div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
-            <span>图生图功能如何使用？</span>
+            <span data-i18n="faq_q5">创意工坊能做什么？</span>
             <span class="faq-icon" aria-hidden="true">▾</span>
           </summary>
           <div class="faq-answer">
-            <p>切换到"图生图"标签页，上传参考图片（支持点击上传、拖拽上传、剪贴板粘贴），输入提示词描述你想要的改动或风格，点击生成即可。图生图支持 AIHubMix 与 Pollinations 引擎；不同模型对图生图的支持程度不同，若某模型不支持会自动提示切换。</p>
+            <p data-i18n="faq_a5_intro">「创意工坊」是高级编辑入口，提供 4 个场景模板：</p>
+            <p data-i18n="faq_a5_a">① 局部编辑：上传 1 张图，写精准指令改颜色/加道具。</p>
+            <p data-i18n="faq_a5_b">② 换装：上传 2 张图（图A=服装，图B=人物），自动换装。</p>
+            <p data-i18n="faq_a5_c">③ 融合：上传 2 张图合成。</p>
+            <p data-i18n="faq_a5_d">④ 换背景：保留主体换场景。</p>
+            <p data-i18n="faq_a5_recommend" data-i18n-html="true">推荐使用 <strong>Nano Banana Pro</strong> 模型，效果最好。</p>
           </div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
-            <span>创意工坊能做什么？和图生图有什么区别？</span>
+            <span data-i18n="faq_q6">我的 API Key 安全吗？</span>
             <span class="faq-icon" aria-hidden="true">▾</span>
           </summary>
           <div class="faq-answer">
-            <p><strong>"✦ 创意工坊"</strong>是一个独立的高级编辑入口，提供 4 个场景模板：</p>
-            <p><strong>① 局部编辑</strong>：上传 1 张图，写精准指令"把头发染红""去掉背景文字"，其余不变。</p>
-            <p><strong>② 换装</strong>：上传 2 张图（图A=服装参考 + 图B=人物），自动把图A的衣服换到图B身上。</p>
-            <p><strong>③ 融合</strong>：上传 2 张图，合成一张——适合"图A的风格 + 图B的构图"这类需求。</p>
-            <p><strong>④ 换背景</strong>：保留主体人物/物体不变，只换背景场景。</p>
-            <p>和图生图的区别：图生图是"1 张图 + 描述 → 变体"，适合风格迁移、变体创作；创意工坊是"多张图 + 场景 → 精准编辑"，适合换装、融合、局部修改。推荐使用 <strong>Nano Banana Pro</strong> 或 <strong>Nano Banana 2</strong> 模型（谷歌 Gemini 系列），对多图理解和编辑能力最强。换装/融合需要 2 张参考图，局部编辑/换景只需 1 张。</p>
-          </div>
-        </details>
-        <details class="faq-item">
-          <summary class="faq-question">
-            <span>我的 API Key 安全吗？</span>
-            <span class="faq-icon" aria-hidden="true">▾</span>
-          </summary>
-          <div class="faq-answer">
-            <p>在网页粘贴的 Key 只存储在你的浏览器本地（localStorage），生成时随请求头发给你自己的本地服务端，不会上传到任何第三方。写进 <code>.env</code> 的 Key 已由 <code>.gitignore</code> 保护，不会被提交到仓库。</p>
+            <p data-i18n="faq_a6" data-i18n-html="true">在网页粘贴的 Key 只存储在你的浏览器本地（localStorage），生成时随请求头发给你自己的本地服务端，不会上传到任何第三方。写进 <code>.env</code> 的 Key 已由 <code>.gitignore</code> 保护，不会被提交到仓库。</p>
           </div>
         </details>
       </div>
@@ -453,17 +445,17 @@
     <div class="section-inner">
       <div class="section-header">
         <span class="section-eyebrow">04 — Showcase</span>
-        <h2 class="section-title">精选作品</h2>
-        <p class="section-desc">社区最新生成的作品，持续更新</p>
+        <h2 class="section-title" data-i18n="section_showcase_title">精选作品</h2>
+        <p class="section-desc" data-i18n="section_showcase_desc">社区最新生成的作品，持续更新</p>
       </div>
       <div class="showcase-grid" id="showcaseGrid">
         <div class="showcase-empty" id="showcaseEmpty">
           <div class="showcase-empty-icon" aria-hidden="true">✦</div>
-          <div class="showcase-empty-text">暂无作品</div>
-          <div class="showcase-empty-hint">生成图片后自动出现在这里</div>
+          <div class="showcase-empty-text" data-i18n="showcase_empty_text">暂无作品</div>
+          <div class="showcase-empty-hint" data-i18n="showcase_empty_hint">生成图片后自动出现在这里</div>
         </div>
       </div>
-      <div class="showcase-loading hidden" id="showcaseLoading">加载中…</div>
+      <div class="showcase-loading hidden" id="showcaseLoading" data-i18n="showcase_loading">加载中…</div>
     </div>
   </section>
 
@@ -476,30 +468,30 @@
             <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
               <path d="M4 20 L8 4 L12 14 L16 4 L20 20"/>
             </svg>
-            <span class="logo-text">AI 绘境</span>
+            <span class="logo-text" data-i18n="site_name">AI 绘境</span>
           </div>
-          <p class="footer-desc">在线 AI 图片生成工具，释放你的想象力。</p>
+          <p class="footer-desc" data-i18n="footer_desc">在线 AI 图片生成工具，释放你的想象力。</p>
         </div>
         <div class="footer-links">
-          <h4>功能</h4>
-          <a href="#tool">文生图</a>
-          <a href="#tool">图生图</a>
-          <a href="#tool">✦ 创意工坊</a>
-          <a href="#showcase">✦ Showcase</a>
+          <h4 data-i18n="footer_feature_title">功能</h4>
+          <a href="#tool" data-i18n="footer_link_t2i">文生图</a>
+          <a href="#tool" data-i18n="footer_link_i2i">图生图</a>
+          <a href="#tool" data-i18n="footer_link_studio">✦ 创意工坊</a>
         </div>
         <div class="footer-links">
-          <h4>资源</h4>
-          <a href="#templates">精选模板</a>
-          <a href="#faq">常见问题</a>
+          <h4 data-i18n="footer_resource_title">资源</h4>
+          <a href="#templates" data-i18n="footer_link_templates">精选模板</a>
+          <a href="#faq" data-i18n="footer_link_faq">常见问题</a>
+          <a href="#showcase" data-i18n="footer_link_showcase">精选作品</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>&copy; 2026 AI 绘境 · Made with care</span>
+        <span data-i18n="footer_copyright">© 2026 AI 绘境 · Made with care</span>
         <span id="footerProvider">Powered by AIHubMix</span>
       </div>
     </div>
   </footer>
 
-  <script src="script.js?v=2026072106"></script>
+  <script src="script.js?v=2026072110"></script>
 </body>
 </html>
