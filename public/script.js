@@ -1240,19 +1240,23 @@ function renderShowcase(grid, images) {
   const empty = grid.querySelector('.showcase-empty');
   if (empty) empty.remove();
 
-  images.forEach((img) => {
+  // 后端可能返回坏图（没有 image_url 也没有有效 image_data），前端先过滤
+  const valid = images.filter((img) => img.image_url || (img.image_data && img.image_data.startsWith('data:')));
+
+  valid.forEach((img) => {
     const card = document.createElement('div');
     card.className = 'showcase-card';
+    const imgSrc = img.image_url || `/api/showcase/image/${img.id}`;
     card.addEventListener('click', () => {
       // 点击打开详情（全屏看图）
       const overlay = document.createElement('div');
       overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;cursor:pointer';
-      overlay.innerHTML = `<img src="/api/showcase/image/${img.id}" style="max-width:90vw;max-height:90vh;border-radius:2px;object-fit:contain" alt="${img.prompt}">`;
+      overlay.innerHTML = `<img src="${escapeHtml(imgSrc)}" style="max-width:90vw;max-height:90vh;border-radius:2px;object-fit:contain" alt="${img.prompt}">`;
       overlay.addEventListener('click', () => overlay.remove());
       document.body.appendChild(overlay);
     });
     card.innerHTML = `
-      <img class="showcase-card-img" src="/api/showcase/image/${img.id}" alt="${img.prompt}" loading="lazy">
+      <img class="showcase-card-img" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(img.prompt)}" loading="lazy">
       <div class="showcase-card-overlay">
         <div class="showcase-card-prompt">${escapeHtml(img.prompt)}</div>
         <div class="showcase-card-meta">
@@ -1261,6 +1265,9 @@ function renderShowcase(grid, images) {
         </div>
       </div>
     `;
+    // 加载失败（如 R2 链接失效）→ 整张卡片自动消失
+    const imgEl = card.querySelector('img');
+    imgEl.addEventListener('error', () => card.remove());
     grid.appendChild(card);
   });
 }
