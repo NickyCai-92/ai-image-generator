@@ -166,13 +166,33 @@ class APIMartProvider extends BaseProvider {
           // 先按文本读（APIMart 有时返回 SSE 流式 data: {...}，r.json() 会报错）
           const raw = await r.text().catch(() => '');
           if (!r.ok) { mapErr(r, raw); }
-          // 尝试 JSON 解析，如果失败则处理 SSE 格式
+          // 智能 JSON 提取：先裸解析，失败则剥离 SSE 前缀行
           try { return JSON.parse(raw); } catch (_) {}
-          // SSE 格式：data: {...}\ndata: {...}\ndata: [DONE]
-          if (raw.trim().startsWith('data: ')) {
-            const lines = raw.split('\n').filter(l => l.startsWith('data: ') && l.trim() !== 'data: [DONE]');
-            const last = lines[lines.length - 1];
-            if (last) return JSON.parse(last.replace(/^data: /, ''));
+          // 忽略 SSE 注释行（: PING）、data: 行、空行，再尝试 JSON
+          const stripped = raw.split('\n').filter(l => {
+            const t = l.trim();
+            return t && !t.startsWith(':') && !t.startsWith('data:') && t !== '[DONE]';
+          }).join('\n');
+          if (stripped) {
+            try {
+              const obj = JSON.parse(stripped);
+              // 剥离后取到的是错误体（{"error":{...}}），映射友好提示
+              if (obj && obj.error) {
+                const msg = obj.error.message || '';
+                const code = obj.error.code || '';
+                if (/get_channel_failed|channel.*busy/i.test(msg + code)) {
+                  throw Object.assign(new Error('APIMart 模型通道繁忙，请稍后重试或换一个模型'), { status: 503, code: 'CHANNEL_BUSY' });
+                }
+                throw Object.assign(new Error(`APIMart 错误: ${msg.slice(0, 200)}`), { status: 502, code });
+              }
+              return obj; // 正常 JSON 响应
+            } catch (pErr) {
+              if (pErr.status || pErr.code) throw pErr; // 已映射的错误
+              // 仍然不可 JSON.parse，但可能包含 CHANNEL_BUSY 文本
+              if (/get_channel_failed|channel.*busy/i.test(raw)) {
+                throw Object.assign(new Error('APIMart 模型通道繁忙，请稍后重试或换一个模型'), { status: 503, code: 'CHANNEL_BUSY' });
+              }
+            }
           }
           throw Object.assign(new Error(`APIMart 响应无法解析: ${raw.slice(0, 200)}`), { status: 502 });
         },
