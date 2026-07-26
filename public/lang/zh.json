@@ -1,0 +1,130 @@
+{
+  "nav_home": "首页",
+  "nav_generate": "在线生成",
+  "nav_templates": "模板",
+  "nav_faq": "常见问题",
+
+  "hero_tag": "Atelier · AI 绘画工坊",
+  "hero_title": "以一个 Key，<em>召唤</em>全球生图模型",
+  "hero_desc": "一座为 AI 绘画而设的工作室。三大引擎、十数个旗舰模型，从 Nano Banana 到 Seedream，从 GPT Image 到 FLUX Kontext。文生图、图生图，无需信用卡，无需翻墙，扫码即开画。",
+  "hero_cta_primary": "开始创作",
+  "hero_cta_secondary": "配置指南",
+  "hero_stat1_num": "20+",
+  "hero_stat1_label": "跨厂商生图模型",
+  "hero_stat2_num": "4",
+  "hero_stat2_label": "统一接入引擎",
+  "hero_stat3_num": "¥10",
+  "hero_stat3_label": "即可开画",
+
+  "section_tool_eyebrow": "01 — The Studio",
+  "section_tool_title": "在线生成",
+  "section_tool_desc": "输入提示词，选择模型和风格，一键生成",
+
+  "section_templates_eyebrow": "02 — Curated",
+  "section_templates_title": "精选模板",
+  "section_templates_desc": "使用预设模板快速生成，一键应用同款风格",
+
+  "section_showcase_eyebrow": "03 — Showcase",
+  "section_showcase_title": "精选作品",
+  "section_showcase_desc": "最新生成的作品，持续更新",
+
+  "section_faq_eyebrow": "04 — Handbook",
+  "section_faq_title": "常见问题",
+  "section_faq_desc": "关于 AI 图片生成器的使用疑问",
+
+  "tab_t2i": "文生图",
+  "tab_i2i": "图生图",
+  "tab_studio": "✦ 创意工坊",
+
+  "cred_label": "API 凭证",
+  "cred_save": "保存",
+  "cred_help": "获取 Key",
+
+  "upload_icon": "⬆",
+  "upload_text": "上传图片",
+  "upload_hint": "支持点击 / 拖动 / 粘贴 上传",
+
+  "prompt_placeholder_t2i": "输入提示词，描述想要的风格或效果",
+  "prompt_placeholder_i2i": "输入提示词，描述想要的风格或效果",
+  "prompt_placeholder_studio": "选择场景模板后自动填充提示词，也可手动修改",
+
+  "pill_model": "模型",
+  "pill_style": "风格",
+  "pill_style_default": "自动",
+  "pill_ratio": "比例",
+  "pill_resolution": "分辨率",
+  "pill_count": "张数",
+
+  "btn_generate": "生成",
+
+  "template_1_name": "水墨山水",
+  "template_1_desc": "国风水墨风格，淡雅意境",
+  "template_2_name": "赛博都市",
+  "template_2_desc": "霓虹灯效，未来都市夜景",
+  "template_3_name": "动漫少女",
+  "template_3_desc": "日系二次元风格角色",
+  "template_4_name": "奇幻角色",
+  "template_4_desc": "D&D 风格奇幻人物设定",
+
+  "studio_scene_edit": "局部编辑",
+  "studio_scene_edit_hint": "改颜色/加道具/修细节",
+  "studio_scene_outfit": "换装",
+  "studio_scene_outfit_hint": "图A服装 → 图B的人",
+  "studio_scene_fusion": "融合",
+  "studio_scene_fusion_hint": "图A + 图B → 合成",
+  "studio_scene_bg": "换背景",
+  "studio_scene_bg_hint": "保留主体，换场景",
+
+  "studio_add_btn": "添加参考图",
+  "studio_count": "0 / 4",
+
+  "gen_placeholder_title": "生成的图片将在这里显示",
+  "gen_placeholder_hint": "输入提示词 → 选择模型 → 点击「生成」",
+
+  "gen_progress_title": "正在通过 {provider} 生成图片",
+  "gen_progress_estimate": "预计 10-60 秒",
+  "gen_progress_cancel": "取消",
+
+  "result_meta": "{model} · 共 {count} 张",
+
+  "showcase_empty_text": "暂无作品",
+  "showcase_empty_hint": "生成图片后自动出现在这里",
+  "showcase_loading": "加载中…",
+
+  "faq_q1": "如何开始使用？需要配置什么？",
+  "faq_a1": "在网页顶部的凭证输入框粘贴你的 API Key 即可。本工具默认使用 <strong>AIHubMix</strong> 统一接入引擎，登录 aihubmix.com → 创建 Key → 粘贴保存 → 输入提示词 → 生成。也可配置 <code>.env</code> 的 <code>AIHUBMIX_KEY</code>。",
+  "faq_q2": "支持哪些模型？有什么区别？",
+  "faq_a2": "两个主引擎：<strong>① AIHubMix（付费）</strong>覆盖 GPT Image 2、Nano Banana Pro/2、Seedream 5.0 Pro、FLUX Kontext、Z-Image Turbo 等顶级模型，支付宝/微信充值。<strong>② Hugging Face（免费）</strong>提供 SDXL Lightning 等开源模型，零成本出图。<strong>③ Pollinations</strong> 性价比之王，支付宝充值（¥38.62 起），Flux 仅 0.0018 pollen/张。",
+  "faq_q3": "AIHubMix / Pollinations 收费吗？",
+  "faq_a3": "两者都按量计费、无会员无包月，<strong>都支持支付宝充值</strong>（最低约 ¥10）。AIHubMix 单张约 ¥0.05-2；Pollinations 单张约 0.0001-0.12 pollen（pollen ≈ $0.01）。",
+  "faq_q4": "图生图功能如何使用？",
+  "faq_a4": "切换到「图生图」标签页，上传参考图片（支持点击/拖拽/剪贴板粘贴），输入提示词描述你想要的改动，点击生成。支持 AIHubMix 与 Pollinations 引擎。",
+  "faq_q5": "创意工坊能做什么？",
+  "faq_a5": "「✦ 创意工坊」是高级编辑入口，提供 4 个场景模板：<strong>① 局部编辑</strong>：改颜色/加道具，其余不变。<strong>② 换装</strong>：2 张图（图A=服装，图B=人）融合。<strong>③ 融合</strong>：2 张图合成一张。<strong>④ 换背景</strong>：保留主体，换场景。推荐使用 <strong>Nano Banana Pro</strong> 模型。",
+  "faq_q6": "我的 API Key 安全吗？",
+  "faq_a6": "在网页粘贴的 Key 只存储在你的浏览器本地（localStorage），随请求头发给本地服务端，不会上传到第三方。写进 <code>.env</code> 的 Key 已由 <code>.gitignore</code> 保护，不会被提交到仓库。",
+
+  "footer_desc": "在线 AI 图片生成工具 · 多引擎支持",
+  "footer_feature_title": "功能",
+  "footer_resource_title": "资源",
+  "footer_link_t2i": "文生图",
+  "footer_link_i2i": "图生图",
+  "footer_link_studio": "✦ 创意工坊",
+  "footer_link_showcase": "✦ Showcase",
+  "footer_link_templates": "精选模板",
+  "footer_link_faq": "常见问题",
+  "footer_copyright": "© 2026 AI 绘境 · Made with care",
+  "footer_powered": "Powered by {provider}",
+
+  "error_no_prompt": "请输入提示词",
+  "error_no_image": "请先上传一张图片",
+  "error_network": "网络错误：{msg}",
+  "error_no_cred": "{name} API Key 未配置：请在界面上方粘贴你的 Key",
+  "error_need_switch": "请在顶部切换到支持图生图的引擎",
+  "error_no_studio_images": "请先添加至少 1 张参考图",
+  "error_model_no_i2i": "当前模型「{name}」不支持图生图",
+
+  "toast_switched": "已切换到 {name}",
+  "toast_template_applied": "已应用「{name}」模板",
+  "toast_file_protocol": "请用 http://localhost:3000 打开页面（不是 file://）"
+}

@@ -21,11 +21,16 @@
         <span class="logo-text">AI 绘境</span>
       </a>
       <nav class="nav" id="nav" aria-label="主导航">
-        <a href="#hero" class="nav-link active">首页</a>
-        <a href="#tool" class="nav-link">在线生成</a>
-        <a href="#templates" class="nav-link">模板</a>
-        <a href="#faq" class="nav-link">常见问题</a>
+        <a href="#hero" class="nav-link active" data-i18n="nav_home">首页</a>
+        <a href="#tool" class="nav-link" data-i18n="nav_generate">在线生成</a>
+        <a href="#templates" class="nav-link" data-i18n="nav_templates">模板</a>
+        <a href="#faq" class="nav-link" data-i18n="nav_faq">常见问题</a>
       </nav>
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="zh" title="中文" onclick="setLang('zh')">🇨🇳 中</button>
+        <button class="lang-btn" data-lang="en" title="English" onclick="setLang('en')">🇬🇧 EN</button>
+        <button class="lang-btn" data-lang="ja" title="日本語" onclick="setLang('ja')">🇯🇵 日</button>
+      </div>
       <button class="nav-toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false" aria-controls="nav">
         <span></span><span></span><span></span>
       </button>
@@ -37,19 +42,19 @@
     <span class="hero-mark" aria-hidden="true">A.</span>
     <span class="hero-mark-2" aria-hidden="true">Atelier</span>
     <div class="hero-content">
-      <span class="hero-tag">Atelier · AI 绘画工坊</span>
-      <h1 class="hero-title">
+      <span class="hero-tag" data-i18n="hero_tag">Atelier · AI 绘画工坊</span>
+      <h1 class="hero-title" data-i18n="hero_title" data-i18n-html="true">
         以一个 Key，<em>召唤</em>全球生图模型
       </h1>
-      <p class="hero-desc">
+      <p class="hero-desc" data-i18n="hero_desc">
         一座为 AI 绘画而设的工作室。三大引擎、十数个旗舰模型，从 Nano Banana 到 Seedream，从 GPT Image 到 FLUX Kontext。
         文生图、图生图，无需信用卡，无需翻墙，扫码即开画。
       </p>
       <div class="hero-actions">
-        <a href="#tool" class="hero-btn hero-btn-primary">
+        <a href="#tool" class="hero-btn hero-btn-primary" data-i18n="hero_cta_primary">
           开始创作 <span class="hero-btn-arrow">→</span>
         </a>
-        <a href="#faq" class="hero-btn hero-btn-secondary">
+        <a href="#faq" class="hero-btn hero-btn-secondary" data-i18n="hero_cta_secondary">
           配置指南
         </a>
       </div>
@@ -76,9 +81,9 @@
   <section class="section section-alt" id="tool">
     <div class="section-inner">
       <div class="section-header">
-        <span class="section-eyebrow">01 — The Studio</span>
-        <h2 class="section-title">在线生成</h2>
-        <p class="section-desc">输入提示词，选择模型和风格，一键生成</p>
+        <span class="section-eyebrow" data-i18n="section_tool_eyebrow">01 — The Studio</span>
+        <h2 class="section-title" data-i18n="section_tool_title">在线生成</h2>
+        <p class="section-desc" data-i18n="section_tool_desc">输入提示词，选择模型和风格，一键生成</p>
       </div>
 
       <!-- ============ 主卡片 ============ -->
@@ -101,9 +106,9 @@
 
         <!-- Tabs -->
         <div class="tabs" role="tablist" aria-label="生成模式">
-          <button class="tab active" role="tab" data-tab="t2i" id="tab-t2i" aria-selected="true" aria-controls="panel-t2i">文生图</button>
-          <button class="tab" role="tab" data-tab="i2i" id="tab-i2i" aria-selected="false" aria-controls="panel-i2i" tabindex="-1">图生图</button>
-          <button class="tab tab-studio" role="tab" data-tab="studio" id="tab-studio" aria-selected="false" aria-controls="panel-studio" tabindex="-1">✦ 创意工坊</button>
+          <button class="tab active" role="tab" data-tab="t2i" id="tab-t2i" aria-selected="true" aria-controls="panel-t2i"><span data-i18n="tab_t2i">文生图</span></button>
+          <button class="tab" role="tab" data-tab="i2i" id="tab-i2i" aria-selected="false" aria-controls="panel-i2i" tabindex="-1"><span data-i18n="tab_i2i">图生图</span></button>
+          <button class="tab tab-studio" role="tab" data-tab="studio" id="tab-studio" aria-selected="false" aria-controls="panel-studio" tabindex="-1"><span data-i18n="tab_studio">✦ 创意工坊</span></button>
         </div>
 
         <!-- 文生图 -->

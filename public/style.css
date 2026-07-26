@@ -275,7 +275,29 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--s-5);
 }
+/* 语言切换器 */
+.lang-switcher {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.lang-btn {
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-tertiary);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all var(--t-fast) var(--ease);
+  letter-spacing: 0.03em;
+}
+.lang-btn:hover { border-color: var(--ink-secondary); color: var(--ink-secondary); }
+.lang-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+@media (max-width: 640px) { .lang-switcher { display: none; } }
 .logo {
   display: inline-flex;
   align-items: baseline;

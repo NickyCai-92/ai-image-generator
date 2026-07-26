@@ -16,8 +16,58 @@ const state = {
   studioImages: [],     // [{ dataUrl, name }] — 创意工坊多图
   studioScene: 'edit',  // 当前选中的场景模板
   isGenerating: false,
-  // 每个 provider 的凭证按各自 storageKey 存本地（fal_key / poll_token）
+  lang: 'zh',
+  langData: null,
 };
+
+// ============ I18N 国际化 ============
+let _i18nInited = false;
+
+function t(key, params) {
+  if (!state.langData) return key;
+  let s = state.langData[key];
+  if (s == null) return key;
+  if (params) {
+    for (const [k, v] of Object.entries(params)) {
+      s = s.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+    }
+  }
+  return s;
+}
+
+async function setLang(code) {
+  if (code === state.lang && _i18nInited) return;
+  try {
+    const res = await fetch(`/lang/${code}.json?t=${Date.now()}`);
+    state.langData = await res.json();
+    state.lang = code;
+    localStorage.setItem('site_lang', code);
+    applyI18n();
+    _i18nInited = true;
+    document.querySelectorAll('.lang-btn').forEach((b) => {
+      b.classList.toggle('active', b.dataset.lang === code);
+    });
+  } catch (err) {
+    console.warn('[i18n] 加载失败:', err.message);
+    if (code !== 'zh') setLang('zh');
+  }
+}
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.dataset.i18n;
+    const raw = t(key);
+    if (raw === key) return;
+    if (el.dataset.i18nHtml === 'true' || raw.includes('<')) {
+      el.innerHTML = raw;
+    } else {
+      el.textContent = raw;
+    }
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+}
 
 // 可见 provider 列表（过滤掉 hidden: true 的）
 function visibleProviders() {
@@ -61,6 +111,9 @@ async function init() {
   initScrollReveal(); // 滚动渐入
   initStudio(); // 创意工坊
   loadShowcase(); // Showcase 作品墙
+  // I18n: 从 localStorage 恢复上次语言，没存过就用 zh
+  const saved = localStorage.getItem('site_lang') || 'zh';
+  setLang(saved);
 }
 
 // ============ 滚动渐入（IntersectionObserver） ============
@@ -712,17 +765,17 @@ async function generate() {
   const prompt = promptInput?.value.trim();
 
   if (!prompt) {
-    showError('请输入提示词');
+    showError(t('error_no_prompt'));
     promptInput?.focus();
     return;
   }
   if (tab === 'i2i' && !state.uploadedImage) {
-    showError('请先上传一张图片');
+    showError(t('error_no_image'));
     return;
   }
   if (tab === 'i2i' && !currentModelSupportsI2I()) {
     const m = (state.config.models || []).find((x) => x.id === state.selected.model);
-    showError(`当前模型「${m?.name || state.selected.model}」不支持图生图`, '请在模型下拉中切换到支持 i2i 的模型（如 Flux、NanoBanana、Seedream 5.0 Pro 等）');
+    showError(t('error_model_no_i2i', { name: m?.name || state.selected.model }));
     return;
   }
 
