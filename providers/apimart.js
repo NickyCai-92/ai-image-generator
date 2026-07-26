@@ -163,8 +163,18 @@ class APIMartProvider extends BaseProvider {
             endpoint, { method: 'POST', headers: this._headers(useKey), body: JSON.stringify(body) },
             180000
           );
-          if (!r.ok) { const b = await r.text().catch(() => ''); mapErr(r, b); }
-          return r.json();
+          // 先按文本读（APIMart 有时返回 SSE 流式 data: {...}，r.json() 会报错）
+          const raw = await r.text().catch(() => '');
+          if (!r.ok) { mapErr(r, raw); }
+          // 尝试 JSON 解析，如果失败则处理 SSE 格式
+          try { return JSON.parse(raw); } catch (_) {}
+          // SSE 格式：data: {...}\ndata: {...}\ndata: [DONE]
+          if (raw.trim().startsWith('data: ')) {
+            const lines = raw.split('\n').filter(l => l.startsWith('data: ') && l.trim() !== 'data: [DONE]');
+            const last = lines[lines.length - 1];
+            if (last) return JSON.parse(last.replace(/^data: /, ''));
+          }
+          throw Object.assign(new Error(`APIMart 响应无法解析: ${raw.slice(0, 200)}`), { status: 502 });
         },
         2,
         { label: 'APIMart', retryOnStatus: [429, 500, 502, 503, 504] }
