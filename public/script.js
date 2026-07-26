@@ -60,6 +60,7 @@ async function init() {
   _setGenState('placeholder'); // 初始显示占位
   initScrollReveal(); // 滚动渐入
   initStudio(); // 创意工坊
+  loadShowcase(); // Showcase 作品墙
 }
 
 // ============ 滚动渐入（IntersectionObserver） ============
@@ -813,6 +814,10 @@ async function generate() {
       console.warn('部分失败:', data.failed);
     }
     showResult(data.images, data.prompt, data.model, data.provider);
+    // 自动保存第一张到 Showcase（异步，不阻塞）
+    if (data.images && data.images[0]) {
+      saveToShowcase(data.images[0], data.prompt, data.model, data.provider);
+    }
   } catch (err) {
     showError(`网络错误：${err.message}`);
   } finally {
@@ -1082,6 +1087,87 @@ async function openInWindow(src) {
   } else {
     window.open(src, '_blank');
   }
+}
+
+// ============ Showcase（作品墙） ============
+
+/**
+ * 保存生成结果到 Showcase
+ */
+async function saveToShowcase(image, prompt, model, provider) {
+  try {
+    await fetch('/api/showcase/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image, prompt, model, provider }),
+    });
+    // 沉默成功，不弹 toast 以免打扰
+  } catch (err) {
+    console.warn('[showcase] 保存失败:', err.message);
+  }
+}
+
+/**
+ * 加载最新 10 张作品并渲染
+ */
+async function loadShowcase() {
+  const grid = $('#showcaseGrid');
+  const loading = $('#showcaseLoading');
+  if (!grid) return;
+  if (loading) loading.classList.remove('hidden');
+  try {
+    const res = await fetch('/api/showcase/latest');
+    const data = await res.json();
+    if (!data.success || !data.images || !data.images.length) {
+      if (loading) loading.classList.add('hidden');
+      return; // 空状态已由 HTML 内置空占位控制
+    }
+    renderShowcase(grid, data.images);
+  } catch (err) {
+    console.warn('[showcase] 加载失败:', err.message);
+  } finally {
+    if (loading) loading.classList.add('hidden');
+  }
+}
+
+/**
+ * 渲染 Showcase 网格
+ */
+function renderShowcase(grid, images) {
+  // 移除空占位
+  const empty = grid.querySelector('.showcase-empty');
+  if (empty) empty.remove();
+
+  images.forEach((img) => {
+    const card = document.createElement('div');
+    card.className = 'showcase-card';
+    card.addEventListener('click', () => {
+      // 点击打开详情（全屏看图）
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;cursor:pointer';
+      overlay.innerHTML = `<img src="/api/showcase/image/${img.id}" style="max-width:90vw;max-height:90vh;border-radius:2px;object-fit:contain" alt="${img.prompt}">`;
+      overlay.addEventListener('click', () => overlay.remove());
+      document.body.appendChild(overlay);
+    });
+    card.innerHTML = `
+      <img class="showcase-card-img" src="/api/showcase/image/${img.id}" alt="${img.prompt}" loading="lazy">
+      <div class="showcase-card-overlay">
+        <div class="showcase-card-prompt">${escapeHtml(img.prompt)}</div>
+        <div class="showcase-card-meta">
+          <span class="showcase-card-model">${escapeHtml(img.model || img.provider)}</span>
+          · ${img.created_at ? new Date(img.created_at + 'Z').toLocaleDateString() : ''}
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
 }
 
 // ============ Start ============

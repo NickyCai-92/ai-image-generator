@@ -12,6 +12,7 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+const { D1Client } = require('./db/d1');
 const {
   getProvider,
   listProviders,
@@ -25,6 +26,24 @@ const {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// D1 数据库（可选，只有配了 D1 环境变量才启用）
+let d1 = null;
+if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.D1_DATABASE_ID && process.env.D1_API_TOKEN) {
+  d1 = new D1Client({
+    accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
+    databaseId: process.env.D1_DATABASE_ID,
+    apiToken: process.env.D1_API_TOKEN,
+  });
+  d1.initSchema().then(() => {
+    console.log('✅ D1 Showcase 已就绪');
+  }).catch((err) => {
+    console.error('❌ D1 初始化失败:', err.message);
+    d1 = null;
+  });
+} else {
+  console.log('ℹ️  D1 未配置，Showcase 功能禁用（设置 CLOUDFLARE_ACCOUNT_ID / D1_DATABASE_ID / D1_API_TOKEN 启用）');
+}
 
 app.use(express.json({ limit: '20mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -214,6 +233,42 @@ app.get('/api/config/:providerId', (req, res) => {
     maxCount: MAX_COUNT,
     supportsI2I: provider.supportsI2I,
   });
+});
+
+// ============ API: 保存生成记录到 Showcase ============
+app.post('/api/showcase/save', async (req, res) => {
+  if (!d1) return res.status(503).json({ error: 'Showcase 未启用（D1 未配置）' });
+  const { image, prompt, model, provider, scene } = req.body;
+  if (!image) return res.status(400).json({ error: '缺少图片数据' });
+  try {
+    await d1.saveImage({ imageData: image, prompt, model, provider, scene });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: '保存失败', details: err.message });
+  }
+});
+
+// ============ API: 获取最新 10 张 Showcase 图片（不含完整 dataUrl，需单独取） ============
+app.get('/api/showcase/latest', async (req, res) => {
+  if (!d1) return res.status(503).json({ error: 'Showcase 未启用（D1 未配置）' });
+  try {
+    const images = await d1.getLatestImages(10);
+    res.json({ success: true, images });
+  } catch (err) {
+    res.status(500).json({ error: '查询失败', details: err.message });
+  }
+});
+
+// ============ API: 获取单张 Showcase 图片（含完整 dataUrl） ============
+app.get('/api/showcase/image/:id', async (req, res) => {
+  if (!d1) return res.status(503).json({ error: 'Showcase 未启用（D1 未配置）' });
+  try {
+    const img = await d1.getImage(Number(req.params.id));
+    if (!img) return res.status(404).json({ error: '图片不存在' });
+    res.json({ success: true, image: img });
+  } catch (err) {
+    res.status(500).json({ error: '查询失败', details: err.message });
+  }
 });
 
 app.listen(PORT, () => {
