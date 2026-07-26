@@ -115,6 +115,8 @@ class APIMartProvider extends BaseProvider {
       throw Object.assign(new Error('APIMart API Key 无效：请检查 .env 或界面粘贴的 Key'), { status: r.status, body: b, code: 'NEED_KEY' });
     if (r.status === 402 || /insufficient|balance|quota/i.test(b))
       throw Object.assign(new Error('APIMart 余额不足：请到 api.apimart.ai 充值（支持支付宝）后重试'), { status: r.status, body: b, code: 'NEED_CREDIT' });
+    if (/get_channel_failed|channel.*busy/i.test(b))
+      throw Object.assign(new Error('APIMart 模型通道繁忙，请稍后重试或换一个模型'), { status: 503, body: b, code: 'CHANNEL_BUSY' });
     if (/model.{0,12}not.{0,12}found|does not exist|unknown model|invalid model/i.test(b))
       throw Object.assign(new Error('APIMart 模型不可用：请确认 ID 在当前账户可用'), { status: r.status, body: b, code: 'BAD_MODEL' });
     if (r.status === 429 || /TooManyRequests/i.test(b))
@@ -123,6 +125,8 @@ class APIMartProvider extends BaseProvider {
   }
 
   _mapChatError(r, b) {
+    if (/get_channel_failed|channel.*busy/i.test(b))
+      throw Object.assign(new Error('APIMart 模型通道繁忙，请稍后重试或换一个模型'), { status: 503, body: b, code: 'CHANNEL_BUSY' });
     if (r.status === 429 || /TooManyRequests/i.test(b))
       throw new Error('APIMart 限流');
     if (r.status === 401 || r.status === 403)
